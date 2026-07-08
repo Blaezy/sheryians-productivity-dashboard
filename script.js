@@ -370,10 +370,10 @@ async function fetchQuote() {
   quoteRefresh.disabled = true;
 
   try {
-    const res = await fetch("https://api.quotable.io/random");
+    const res = await fetch("https://dummyjson.com/quotes/random");
     if (!res.ok) throw new Error("bad response");
     const data = await res.json();
-    paintQuote(data.content, data.author);
+    paintQuote(data.quote, data.author);
   } catch (e) {
     showFallbackQuote();
   }
@@ -598,11 +598,11 @@ async function fetchWeather(lat, lon, placeName) {
 
 async function reverseGeocodeLabel(lat, lon) {
   try {
-    const res = await fetch(`https://geocoding-api.open-meteo.com/v1/reverse?latitude=${lat}&longitude=${lon}&count=1`);
+    const res = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
     if (!res.ok) throw new Error("no label");
     const data = await res.json();
-    const first = data.results && data.results[0];
-    return first ? `${first.name}${first.admin1 ? ", " + first.admin1 : ""}` : "Your location";
+    const city = data.city || data.locality || data.principalSubdivision;
+    return city ? `${city}${data.countryName ? ", " + data.countryName : ""}` : "Your location";
   } catch (e) {
     return "Your location";
   }
